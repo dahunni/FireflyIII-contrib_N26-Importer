@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from n26 import api
 from n26 import config
+from n26.config import Config
 
 load_dotenv();
 
@@ -23,7 +24,12 @@ def printLog(infos, e = ""):
     f.close()
 
 def main(cat_mappings):
-    conf = config.Config(os.getenv("N26_USER"), os.getenv("N26_PASSWORD"), 'store/n26_creds')
+    conf = Config(validate=False)
+    conf.USERNAME.value = os.getenv("N26_USER")
+    conf.PASSWORD.value = os.getenv("N26_PASSWORD")
+    conf.LOGIN_DATA_STORE_PATH.value = os.getenv("N26_PATH")
+    conf.MFA_TYPE.value = os.getenv("N26_TYPE")
+    conf.validate()
     client = api.Api(conf)
 
     #s to ms - CET Local
@@ -68,6 +74,8 @@ def main(cat_mappings):
                     payload["destination_iban"] = transaction["partnerIban"]
                 if 'referenceText' in transaction:
                     payload["description"] = transaction["referenceText"]
+                else:
+                    payload["description"] = "N/A"
 
                 payload["source_name"] = "N26" if is_debit else transaction["partnerName"]
                 payload["destination_name"] = transaction["partnerName"] if is_debit else "N26"
