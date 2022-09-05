@@ -29,6 +29,7 @@ def main(cat_mappings):
     conf.PASSWORD.value = os.getenv("N26_PASSWORD")
     conf.LOGIN_DATA_STORE_PATH.value = os.getenv("N26_PATH")
     conf.MFA_TYPE.value = os.getenv("N26_TYPE")
+    conf.DEVICE_TOKEN.value = os.getenv("N26_TOKEN")
     conf.validate()
     client = api.Api(conf)
 

@@ -1,9 +1,15 @@
-FROM python:3.6.12-alpine3.12
+FROM python:latest
 
-COPY . .
+COPY start.sh .
+
+COPY main.py .
+
+COPY requirements.txt .
+
+COPY categories /categories
+
+COPY store /store
 
 RUN pip install -r requirements.txt
 
-RUN crontab crontab
-
-CMD ["sh", "/start.sh"]
+CMD ["./start.sh", "loop"]
